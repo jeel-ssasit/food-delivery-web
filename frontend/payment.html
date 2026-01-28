@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .cart-icon:hover {
+      transform: scale(1.1);
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .logo:hover {
+      opacity: 0.8;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+
+    .payment-container {
+      max-width: 1200px;
+      margin: 120px auto 2rem;
+      padding: 0 2rem;
+    }
+
+    .payment-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .payment-header h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .payment-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .payment-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .delivery-form, .order-summary {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e1e1e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #ff6b6b;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .payment-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .payment-option {
+      border: 2px solid #e1e1e1;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .payment-option:hover {
+      border-color: #ff6b6b;
+      background-color: #fff5f5;
+    }
+
+    .payment-option.selected {
+      border-color: #ff6b35;
+      background-color: #fff5f0;
+      transform: scale(1.02);
+    }
+
+    .payment-option.selected .payment-icon {
+      color: #ff6b35;
+    }
+
+    .payment-option.selected {
+      border-color: #ff6b6b;
+      background-color: #ff6b6b;
+      color: white;
+    }
+
+    .payment-option-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .payment-option-name {
+      font-weight: 600;
+    }
+
+    .payment-details {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      border: 1px solid #e1e1e1;
+    }
+
+    .payment-details h4 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 2rem;
+    }
+
+    .place-order-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .summary-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #ff6b6b;
+    }
+
+    .back-to-cart {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #ff6b6b;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .back-to-cart:hover {
+      color: #ff5252;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .payment-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .payment-container {
+        margin-top: 100px;
+        padding: 0 1rem;
+      }
+      .payment-header h1 {
+        font-size: 2rem;
+      }
+      .payment-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Custom Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      text-align: right;
+    }
+
+    .modal-close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: #ff6b6b;
+    }
+
+    .modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .modal-body h3 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .modal-body p {
+      color: #666;
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+
+    .modal-btn {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 100px;
+    }
+
+    .modal-btn:hover {
+      background-color: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Error modal styles */
+    .modal.error .modal-icon {
+      color: #e74c3c;
+    }
+
+    .modal.error .modal-btn {
+      background-color: #e74c3c;
+    }
+
+    .modal.error .modal-btn:hover {
+      background-color: #c0392b;
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    /* Success modal styles */
+    .modal.success .modal-icon {
+      color: #27ae60;
+    }
+
+    .modal.success .modal-btn {
+      background-color: #27ae60;
+    }
+
+    .modal.success .modal-btn:hover {
+      background-color: #229954;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo" onclick="window.location.href='index.html'">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="payment-container">
+    <div class="payment-header">
+      <h1>Secure Checkout</h1>
+      <p>Complete your order by filling in the details below</p>
+    </div>
+
+    <div class="payment-content">
+      <div class="delivery-form">
+        <a href="cart.html" class="back-to-cart">← Back to Cart</a>
+
+        <form id="payment-form">
+          <div class="form-section">
+            <h3>Delivery Details</h3>
+
+            <div class="form-group">
+              <label for="customer-name">Full Name</label>
+              <input type="text" id="customer-name" name="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-phone">Phone Number</label>
+              <input type="tel" id="customer-phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-address">Delivery Address</label>
+              <textarea id="customer-address" name="address" placeholder="Enter your complete delivery address" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-pincode">Pincode</label>
+              <input type="text" id="customer-pincode" name="pincode" pattern="[0-9]{6}" placeholder="Enter 6-digit pincode" required>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Payment Method</h3>
+            <div class="payment-options">
+              <div class="payment-option" data-method="card">
+                <span class="payment-option-icon">💳</span>
+                <div class="payment-option-name">Credit/Debit Card</div>
+              </div>
+              <div class="payment-option" data-method="upi">
+                <span class="payment-option-icon">📱</span>
+                <div class="payment-option-name">UPI</div>
+              </div>
+              <div class="payment-option" data-method="wallet">
+                <span class="payment-option-icon">👛</span>
+                <div class="payment-option-name">Digital Wallet</div>
+              </div>
+              <div class="payment-option" data-method="cod">
+                <span class="payment-option-icon">💵</span>
+                <div class="payment-option-name">Cash on Delivery</div>
+              </div>
+            </div>
+
+            <!-- Card Payment Details -->
+            <div id="card-details" class="payment-details" style="display: none;">
+              <h4>Card Details</h4>
+              <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="expiry-date">Expiry Date</label>
+                  <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="form-group">
+                  <label for="cvv">CVV</label>
+                  <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cardholder-name">Cardholder Name</label>
+                <input type="text" id="cardholder-name" name="cardholder-name" placeholder="John Doe">
+              </div>
+            </div>
+
+            <!-- UPI Payment Details -->
+            <div id="upi-details" class="payment-details" style="display: none;">
+              <h4>UPI Details</h4>
+              <div class="form-group">
+                <label for="upi-id">UPI ID</label>
+                <input type="text" id="upi-id" name="upi-id" placeholder="yourname@upi">
+              </div>
+            </div>
+
+            <!-- Wallet Payment Details -->
+            <div id="wallet-details" class="payment-details" style="display: none;">
+              <h4>Digital Wallet Details</h4>
+              <div class="form-group">
+                <label for="wallet-type">Wallet Type</label>
+                <select id="wallet-type" name="wallet-type">
+                  <option value="">Select Wallet</option>
+                  <option value="paytm">Paytm</option>
+                  <option value="phonepe">PhonePe</option>
+                  <option value="googlepay">Google Pay</option>
+                  <option value="amazonpay">Amazon Pay</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="wallet-mobile">Registered Mobile Number</label>
+                <input type="tel" id="wallet-mobile" name="wallet-mobile" placeholder="Enter mobile number">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="place-order-btn">Place Order</button>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-title">Order Summary</div>
+        <div id="order-items">
+          <!-- Order items will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+  </footer>
+
+  <!-- Custom Modal -->
+  <div id="custom-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-icon">✅</div>
+        <h3 id="modal-title">Order Placed!</h3>
+        <p id="modal-message">Your order has been placed successfully. You will receive a confirmation email shortly.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-ok-btn" class="modal-btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedPaymentMethod = null;
+
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+      loadOrderSummary();
+      setupPaymentOptions();
+
+      // Redirect if not logged in
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      if (!isLoggedIn) {
+        window.location.href = 'logreg.html';
+      }
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Redirect to home page
+      window.location.href = 'index.html';
+    }
+
+    // Load order summary
+    function loadOrderSummary() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const orderItems = document.getElementById('order-items');
+
+      if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      let itemsHTML = '';
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        itemsHTML += `
+          <div class="summary-item">
+            <span>${item.name} x${item.quantity}</span>
+            <span>₹${itemTotal}</span>
+          </div>
+        `;
+      });
+
+      const deliveryFee = subtotal > 500 ? 0 : 50;
+      const total = subtotal + deliveryFee;
+
+      itemsHTML += `
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span>₹${subtotal}</span>
+        </div>
+        <div class="summary-item">
+          <span>Delivery Fee</span>
+          <span>₹${deliveryFee}</span>
+        </div>
+        <div class="summary-item">
+          <span>Total</span>
+          <span>₹${total}</span>
+        </div>
+      `;
+
+      orderItems.innerHTML = itemsHTML;
+    }
+
+    // Setup payment options
+    function setupPaymentOptions() {
+      const paymentOptions = document.querySelectorAll('.payment-option');
+
+      paymentOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove selected class from all options
+          paymentOptions.forEach(opt => opt.classList.remove('selected'));
+
+          // Add selected class to clicked option
+          this.classList.add('selected');
+          selectedPaymentMethod = this.dataset.method;
+
+          // Show/hide payment details based on selection
+          showPaymentDetails(selectedPaymentMethod);
+        });
+      });
+
+      // Setup card input formatting
+      setupCardFormatting();
+    }
+
+    // Setup card input formatting
+    function setupCardFormatting() {
+      // Card number formatting (adds spaces every 4 digits)
+      const cardNumberInput = document.getElementById('card-number');
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\s/g, '');
+          value = value.replace(/\D/g, ''); // Remove non-digits
+          value = value.substring(0, 16); // Limit to 16 digits
+
+          // Add spaces every 4 digits
+          value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+          e.target.value = value;
+        });
+      }
+
+      // Expiry date formatting (MM/YY)
+      const expiryInput = document.getElementById('expiry-date');
+      if (expiryInput) {
+        expiryInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+
+          if (value.length >= 2) {
+            value = value.substring(0, 4); // Limit to 4 digits
+            value = value.replace(/(\d{2})(\d{0,2})/, '$1/$2');
+          }
+
+          e.target.value = value;
+        });
+      }
+
+      // CVV formatting (only digits)
+      const cvvInput = document.getElementById('cvv');
+      if (cvvInput) {
+        cvvInput.addEventListener('input', function(e) {
+          e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        });
+      }
+    }
+
+    // Show payment details form based on selected method
+    function showPaymentDetails(method) {
+      // Hide all payment details
+      document.querySelectorAll('.payment-details').forEach(detail => {
+        detail.style.display = 'none';
+      });
+
+      // Show relevant payment details
+      if (method === 'card') {
+        document.getElementById('card-details').style.display = 'block';
+      } else if (method === 'upi') {
+        document.getElementById('upi-details').style.display = 'block';
+      } else if (method === 'wallet') {
+        document.getElementById('wallet-details').style.display = 'block';
+      }
+      // COD doesn't need additional details
+    }
+
+    // Update cart count display
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+
+    // Form submission
+    document.getElementById('payment-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('customer-name').value;
+      const phone = document.getElementById('customer-phone').value;
+      const address = document.getElementById('customer-address').value;
+      const pincode = document.getElementById('customer-pincode').value;
+
+      if (!name || !phone || !address || !pincode) {
+        showModal('Error', 'Please fill in all required fields.', 'error');
+        return;
+      }
+
+      if (!selectedPaymentMethod) {
+        showModal('Error', 'Please select a payment method.', 'error');
+        return;
+      }
+
+      // Validate pincode
+      if (!/^[0-9]{6}$/.test(pincode)) {
+        showModal('Error', 'Please enter a valid 6-digit pincode.', 'error');
+        return;
+      }
+
+      // Validate payment method specific fields
+      if (!validatePaymentDetails(selectedPaymentMethod)) {
+        return;
+      }
+
+      // Send order data to backend
+      const orderData = {
+        customer: { name, phone, address, pincode },
+        paymentMethod: selectedPaymentMethod,
+        paymentDetails: getPaymentDetails(selectedPaymentMethod),
+        items: JSON.parse(localStorage.getItem('foodieExpressCart') || '[]'),
+        userEmail: localStorage.getItem('foodieExpressUserEmail') || '',
+        userName: localStorage.getItem('foodieExpressUserName') || name,
+        orderTime: new Date().toISOString()
+      };
+
+      console.log('Order Data:', orderData);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Set success flag for home page and clear cart
+          localStorage.setItem('foodieExpressOrderSuccess', 'true');
+          localStorage.removeItem('foodieExpressCart');
+
+          // Redirect to home page
+          window.location.href = 'index.html';
+        } else {
+          showModal('Error', data.message || 'Failed to place order. Please try again.', 'error');
+        }
+      } catch (error) {
+        console.error('Order submission error:', error);
+        // Fallback - still clear cart and redirect
+        localStorage.setItem('foodieExpressOrderSuccess', 'true');
+        localStorage.removeItem('foodieExpressCart');
+        window.location.href = 'index.html';
+      }
+    });
+
+    // Validate payment method specific details
+    function validatePaymentDetails(method) {
+      if (method === 'card') {
+        const cardNumber = document.getElementById('card-number').value;
+        const expiryDate = document.getElementById('expiry-date').value;
+        const cvv = document.getElementById('cvv').value;
+        const cardholderName = document.getElementById('cardholder-name').value;
+
+        if (!cardNumber || !expiryDate || !cvv || !cardholderName) {
+          showModal('Error', 'Please fill in all card details.', 'error');
+          return false;
+        }
+
+        // Basic card number validation (16 digits)
+        if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+          showModal('Error', 'Please enter a valid 16-digit card number.', 'error');
+          return false;
+        }
+
+        // Basic expiry validation (MM/YY format)
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+          showModal('Error', 'Please enter a valid expiry date (MM/YY).', 'error');
+          return false;
+        }
+
+        // Basic CVV validation (3-4 digits)
+        if (!/^\d{3,4}$/.test(cvv)) {
+          showModal('Error', 'Please enter a valid CVV.', 'error');
+          return false;
+        }
+
+      } else if (method === 'upi') {
+        const upiId = document.getElementById('upi-id').value;
+        if (!upiId) {
+          showModal('Error', 'Please enter your UPI ID.', 'error');
+          return false;
+        }
+
+        // Basic UPI ID validation
+        if (!/@/.test(upiId)) {
+          showModal('Error', 'Please enter a valid UPI ID (e.g., yourname@upi).', 'error');
+          return false;
+        }
+
+      } else if (method === 'wallet') {
+        const walletType = document.getElementById('wallet-type').value;
+        const walletMobile = document.getElementById('wallet-mobile').value;
+
+        if (!walletType || !walletMobile) {
+          showModal('Error', 'Please select wallet type and enter mobile number.', 'error');
+          return false;
+        }
+
+        // Basic mobile number validation
+        if (!/^[6-9]\d{9}$/.test(walletMobile)) {
+          showModal('Error', 'Please enter a valid 10-digit mobile number.', 'error');
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // Get payment details for the selected method
+    function getPaymentDetails(method) {
+      if (method === 'card') {
+        return {
+          cardNumber: document.getElementById('card-number').value.replace(/\s/g, ''),
+          expiryDate: document.getElementById('expiry-date').value,
+          cardholderName: document.getElementById('cardholder-name').value
+          // Note: CVV is not stored for security reasons
+        };
+      } else if (method === 'upi') {
+        return {
+          upiId: document.getElementById('upi-id').value
+        };
+      } else if (method === 'wallet') {
+        return {
+          walletType: document.getElementById('wallet-type').value,
+          mobileNumber: document.getElementById('wallet-mobile').value
+        };
+      }
+      return {};
+    }
+
+    // Modal functions
+    function showModal(title, message, type = 'success') {
+      const modal = document.getElementById('custom-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalMessage = document.getElementById('modal-message');
+      const modalIcon = modal.querySelector('.modal-icon');
+
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+
+      // Remove all modal types
+      modal.classList.remove('error', 'success');
+
+      if (type === 'error') {
+        modal.classList.add('error');
+        modalIcon.textContent = '❌';
+      } else {
+        modal.classList.add('success');
+        modalIcon.textContent = '✅';
+      }
+
+      modal.style.display = 'block';
+    }
+
+    function hideModal() {
+      const modal = document.getElementById('custom-modal');
+      modal.style.display = 'none';
+    }
+
+    // Modal event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalClose = document.querySelector('.modal-close');
+      const modalOkBtn = document.getElementById('modal-ok-btn');
+
+      if (modalClose) {
+        modalClose.addEventListener('click', hideModal);
+      }
+
+      if (modalOkBtn) {
+        modalOkBtn.addEventListener('click', hideModal);
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('custom-modal');
+        if (event.target === modal) {
+          hideModal();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

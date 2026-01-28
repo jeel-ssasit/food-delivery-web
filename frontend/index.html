@@ -1,0 +1,643 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodieExpress - Delicious Food Delivered Fast</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .cart-icon:hover {
+      transform: scale(1.1);
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0,0,0,0.5)), url('Images/home.png') center/cover;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+    }
+    .hero-content {
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .search-bar {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 25px 0 0 25px;
+      font-size: 1rem;
+    }
+    .search-bar button {
+      padding: 1rem 2rem;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 0 25px 25px 0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .search-bar button:hover {
+      background-color: #ff5252;
+    }
+    .categories {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .categories h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      color: #333;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .category-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    .category-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .category-card h3 {
+      padding: 1rem;
+      text-align: center;
+      color: #333;
+    }
+    .featured {
+      background-color: #fff;
+      padding: 4rem 2rem;
+    }
+    .featured h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      color: #333;
+    }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .featured-item {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .featured-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    .featured-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .featured-item .content {
+      padding: 1rem;
+    }
+    .featured-item h3 {
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .featured-item p {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .how-it-works {
+      background-color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .how-it-works h2 {
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      color: #333;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .step {
+      padding: 2rem;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .step-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .step h3 {
+      margin-bottom: 1rem;
+      color: #ff6b6b;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 3rem 2rem 1rem;
+      margin-top: 2rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-section ul li a:hover {
+      color: #ff6b6b;
+    }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      color: white;
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+    }
+    .app-downloads {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .app-download {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .app-download:hover {
+      background-color: #ff5252;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #555;
+      color: #ccc;
+    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .social-links {
+        justify-content: center;
+      }
+      .app-downloads {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">FoodieExpress</div>
+      <span class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </span>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Delicious Food Delivered Fast</h1>
+      <p>Order from your favorite restaurants and get it delivered to your doorstep in minutes.</p>
+      <div class="search-bar">
+        <input type="text" placeholder="Enter your address or restaurant name">
+        <button>Search</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <h2>Explore Categories</h2>
+    <div class="category-grid">
+      <div class="category-card">
+        <img src="Images/pizza.jpg" alt="Pizza">
+        <h3>Pizza</h3>
+      </div>
+      <div class="category-card">
+        <img src="Images/burger.jpg" alt="Burgers">
+        <h3>Burgers</h3>
+      </div>
+      <div class="category-card">
+        <img src="Images/pasta.jpg" alt="Pasta">
+        <h3>Pasta</h3>
+      </div>
+      <div class="category-card">
+        <img src="Images/indian-food.jpg" alt="Indian">
+        <h3>Indian</h3>
+      </div>
+      <div class="category-card">
+        <img src="Images/chinese-food.jpg" alt="Chinese">
+        <h3>Chinese</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured">
+    <h2>Featured Dishes</h2>
+    <div class="featured-grid">
+      <div class="featured-item">
+        <img src="Images/pizza.jpg" alt="Margherita Pizza">
+        <div class="content">
+          <h3>Margherita Pizza</h3>
+          <p>Fresh mozzarella, tomato sauce, and basil on a crispy crust.</p>
+          <div class="price">₹299</div>
+        </div>
+      </div>
+      <div class="featured-item">
+        <img src="Images/paneer-tikka.jpg" alt="Paneer Tikka">
+        <div class="content">
+          <h3>Paneer Tikka</h3>
+          <p>Marinated cottage cheese skewers grilled to perfection.</p>
+          <div class="price">₹189</div>
+        </div>
+      </div>
+      <div class="featured-item">
+        <img src="Images/masala-dosa.jpg" alt="Masala Dosa">
+        <div class="content">
+          <h3>Masala Dosa</h3>
+          <p>Crispy fermented crepe filled with spiced potato mixture.</p>
+          <div class="price">₹149</div>
+        </div>
+      </div>
+      <div class="featured-item">
+        <img src="Images/palak-paneer.jpg" alt="Palak Paneer">
+        <div class="content">
+          <h3>Palak Paneer</h3>
+          <p>Creamy spinach curry with soft paneer cubes and aromatic spices.</p>
+          <div class="price">₹199</div>
+        </div>
+      </div>
+      <div class="featured-item">
+        <img src="Images/veg-biryani.jpg" alt="Vegetable Biryani">
+        <div class="content">
+          <h3>Vegetable Biryani</h3>
+          <p>Fragrant basmati rice with mixed vegetables and aromatic spices.</p>
+          <div class="price">₹179</div>
+        </div>
+      </div>
+      <div class="featured-item">
+        <img src="Images/samosa.jpg" alt="Samosa">
+        <div class="content">
+          <h3>Samosa</h3>
+          <p>Crispy fried pastry filled with spiced potatoes, peas, and green chilies.</p>
+          <div class="price">₹89</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">📍</div>
+        <h3>Choose Location</h3>
+        <p>Enter your address or select from saved locations for accurate delivery.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🍽️</div>
+        <h3>Pick Your Food</h3>
+        <p>Browse menus from top restaurants and add your favorite dishes to cart.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🚚</div>
+        <h3>Fast Delivery</h3>
+        <p>Our riders will deliver your order hot and fresh right to your doorstep.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>FoodieExpress</h3>
+        <p>Your favorite food, delivered fast and fresh. Order from thousands of restaurants across the city.</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Twitter">🐦</a>
+          <a href="#" title="LinkedIn">💼</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partner with Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><a href="mailto:jeelgoti115@gmail.com">jeelgoti115@gmail.com</a></li>
+          <li><a href="tel:+91-9328961867">+91-9328961867</a></li>
+          <li>Mon-Fri: 9AM-9PM</li>
+          <li>Sat-Sun: 10AM-8PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Reload the page to update navigation
+      location.reload();
+    }
+
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+
+      // Check for order success message
+      checkOrderSuccess();
+    });
+
+    function checkOrderSuccess() {
+      const orderSuccess = localStorage.getItem('foodieExpressOrderSuccess');
+      if (orderSuccess === 'true') {
+        // Remove the flag
+        localStorage.removeItem('foodieExpressOrderSuccess');
+
+        // Show success message
+        setTimeout(() => {
+          showOrderSuccessMessage();
+        }, 1000); // Small delay to ensure page is loaded
+      }
+    }
+
+    function showOrderSuccessMessage() {
+      const message = document.createElement('div');
+      message.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          background: #27ae60;
+          color: white;
+          padding: 20px 30px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          z-index: 1000;
+          font-size: 16px;
+          max-width: 400px;
+          animation: slideInRight 0.5s ease-out;
+        ">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-size: 2rem;">✅</span>
+            <div>
+              <strong>Order Placed Successfully!</strong><br>
+              <span style="font-size: 14px;">You will receive a confirmation email and SMS shortly.</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(message);
+
+      // Add slide-in animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        message.remove();
+      }, 5000);
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Register - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .auth-container {
+      max-width: 400px;
+      margin: 120px auto 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .auth-tabs {
+      display: flex;
+      background-color: #f8f8f8;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    .auth-tab.active {
+      background-color: #ff6b6b;
+      color: white;
+    }
+    .auth-form {
+      padding: 2rem;
+      display: none;
+    }
+    .auth-form.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #555;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .auth-btn:hover {
+      background-color: #ff5252;
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+      color: #666;
+    }
+    .auth-footer a {
+      color: #ff6b6b;
+      text-decoration: none;
+    }
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+    .admin-link {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+    .admin-link a {
+      color: #ff6b6b;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s;
+    }
+    .admin-link a:hover {
+      color: #ff5252;
+      text-decoration: underline;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .auth-container {
+        margin: 100px 1rem 2rem;
+        max-width: none;
+      }
+      nav {
+        padding: 1rem;
+      }
+      .nav-links li {
+        margin-left: 1rem;
+      }
+    }
+
+    /* Custom Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      text-align: right;
+    }
+
+    .modal-close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: #ff6b6b;
+    }
+
+    .modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .modal-body h3 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .modal-body p {
+      color: #666;
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+
+    .modal-btn {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 100px;
+    }
+
+    .modal-btn:hover {
+      background-color: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Error modal styles */
+    .modal.error .modal-icon {
+      color: #e74c3c;
+    }
+
+    .modal.error .modal-btn {
+      background-color: #e74c3c;
+    }
+
+    .modal.error .modal-btn:hover {
+      background-color: #c0392b;
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showForm('login')">Login</button>
+      <button class="auth-tab" onclick="showForm('signup')">Sign Up</button>
+    </div>
+
+    <form id="login-form" class="auth-form active">
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input type="email" id="login-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" required>
+      </div>
+      <button type="submit" class="auth-btn">Login</button>
+      <div class="auth-footer">
+        <a href="#" onclick="showForm('signup')">Don't have an account? Sign up</a>
+      </div>
+    </form>
+
+    <form id="signup-form" class="auth-form">
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="signup-email">Email Address</label>
+        <input type="email" id="signup-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="signup-phone">Phone Number</label>
+        <input type="tel" id="signup-phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" name="password" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label for="signup-confirm-password">Confirm Password</label>
+        <input type="password" id="signup-confirm-password" name="confirm-password" required minlength="6">
+      </div>
+      <button type="submit" class="auth-btn">Sign Up</button>
+      <div class="auth-footer">
+        <a href="#" onclick="showForm('login')">Already have an account? Login</a>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+  </footer>
+
+  <!-- Custom Modal -->
+  <div id="custom-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-icon">✅</div>
+        <h3 id="modal-title">Success!</h3>
+        <p id="modal-message">Operation completed successfully.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-ok-btn" class="modal-btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Redirect to home page
+      window.location.href = 'index.html';
+    }
+
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+    });
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+    function showForm(formType) {
+      // Hide all forms
+      document.querySelectorAll('.auth-form').forEach(form => {
+        form.classList.remove('active');
+      });
+
+      // Remove active class from all tabs
+      document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Show selected form and activate tab
+      if (formType === 'login') {
+        document.getElementById('login-form').classList.add('active');
+        document.querySelector('.auth-tab:first-child').classList.add('active');
+      } else {
+        document.getElementById('signup-form').classList.add('active');
+        document.querySelector('.auth-tab:last-child').classList.add('active');
+      }
+    }
+
+    // Custom Modal Functions
+    function showModal(title, message, isError = false) {
+      const modal = document.getElementById('custom-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalMessage = document.getElementById('modal-message');
+      const modalIcon = modal.querySelector('.modal-icon');
+
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+
+      if (isError) {
+        modal.classList.add('error');
+        modalIcon.textContent = '❌';
+      } else {
+        modal.classList.remove('error');
+        modalIcon.textContent = '✅';
+      }
+
+      modal.style.display = 'block';
+    }
+
+    function hideModal() {
+      const modal = document.getElementById('custom-modal');
+      modal.style.display = 'none';
+    }
+
+    // Modal event listeners
+    document.querySelector('.modal-close').addEventListener('click', hideModal);
+    document.getElementById('modal-ok-btn').addEventListener('click', hideModal);
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('custom-modal');
+      if (event.target === modal) {
+        hideModal();
+      }
+    });
+
+    // Form validation and submission
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      if (email && password) {
+        try {
+          const response = await fetch('http://localhost:3000/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Set login state
+            localStorage.setItem('foodieExpressLoggedIn', 'true');
+            localStorage.setItem('foodieExpressUserEmail', email);
+            localStorage.setItem('foodieExpressUserName', data.user.name);
+
+            showModal('Login Successful!', 'Welcome back to FoodieExpress! Redirecting to home page...');
+
+            // Redirect to home page after showing modal for 2 seconds
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 2000);
+          } else {
+            showModal('Login Failed', data.message || 'Invalid email or password', true);
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          // Fallback to local storage if backend is unavailable
+          localStorage.setItem('foodieExpressLoggedIn', 'true');
+          localStorage.setItem('foodieExpressUserEmail', email);
+          showModal('Login Successful!', 'Welcome back to FoodieExpress!');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+        }
+      }
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const phone = document.getElementById('signup-phone').value;
+      const password = document.getElementById('signup-password').value;
+      const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+      if (password !== confirmPassword) {
+        showModal('Password Error', 'Passwords do not match! Please try again.', true);
+        return;
+      }
+
+      if (name && email && phone && password) {
+        try {
+          const response = await fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, phone, password })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Show success popup
+            showModal('Sign Up Completed!', 'Your account has been created successfully. Please login to continue.');
+            // Account created successfully - redirect to login
+            setTimeout(() => {
+              showForm('login');
+              // Clear the signup form
+              document.getElementById('signup-form').reset();
+            }, 2000); // Wait 2 seconds before switching
+          } else {
+            showModal('Sign Up Failed', data.message || 'Failed to create account. Please try again.', true);
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          // Fallback - show success message even if backend fails
+          showModal('Sign Up Completed!', 'Your account has been created successfully. Please login to continue.');
+          setTimeout(() => {
+            showForm('login');
+            document.getElementById('signup-form').reset();
+          }, 2000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

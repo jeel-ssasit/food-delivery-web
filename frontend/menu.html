@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .menu-hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('Images/menu.jpg') center/cover;
+      height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+    }
+    .menu-hero-content {
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+    .menu-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .menu-hero p {
+      font-size: 1.3rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .menu-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .search-bar {
+      display: flex;
+      flex: 1;
+      max-width: 400px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 25px 0 0 25px;
+      font-size: 1rem;
+    }
+    .search-bar button {
+      padding: 0.8rem 1.5rem;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 0 25px 25px 0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .search-bar button:hover {
+      background-color: #ff5252;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #ff6b6b;
+      color: white;
+      border-color: #ff6b6b;
+    }
+    .restaurants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .restaurant-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .restaurant-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    .restaurant-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .restaurant-info {
+      padding: 1.5rem;
+    }
+    .restaurant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .restaurant-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .restaurant-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rating-stars {
+      color: #ffd700;
+      font-size: 1.1rem;
+    }
+    .rating-number {
+      font-weight: bold;
+      color: #333;
+    }
+    .restaurant-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .restaurant-cuisine {
+      background: #f0f0f0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      color: #666;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .menu-items {
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+    }
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    .item-info {
+      flex: 1;
+    }
+    .item-name {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.3rem;
+    }
+    .item-description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+    }
+    .item-price {
+      font-weight: bold;
+      color: #ff6b6b;
+    }
+    .add-to-cart {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .add-to-cart:hover {
+      background: #ff5252;
+    }
+    .view-full-menu {
+      width: 100%;
+      padding: 1rem;
+      background: #f8f8f8;
+      border: none;
+      color: #ff6b6b;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 1rem;
+    }
+    .menu-item.hidden {
+      display: none;
+    }
+
+    .view-full-menu.expanded::after {
+      content: ' ▲';
+    }
+
+    .view-full-menu::after {
+      content: ' ▼';
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 3rem 2rem 1rem;
+      margin-top: 2rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-section ul li a:hover {
+      color: #ff6b6b;
+    }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      color: white;
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+    }
+    .app-downloads {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .app-download {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .app-download:hover {
+      background-color: #ff5252;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #555;
+      color: #ccc;
+    }
+    @media (max-width: 768px) {
+      .menu-hero h1 {
+        font-size: 2.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-bar {
+        max-width: none;
+      }
+      .filter-buttons {
+        justify-content: center;
+      }
+      .restaurants-grid {
+        grid-template-columns: 1fr;
+      }
+      .restaurant-header {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .social-links {
+        justify-content: center;
+      }
+      .app-downloads {
+        justify-content: center;
+      }
+    }
+
+    /* Add to cart feedback animation */
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="menu-hero">
+    <div class="menu-hero-content">
+      <h1>Explore Our Menu</h1>
+      <p>Discover delicious food from the best restaurants in your area</p>
+    </div>
+  </section>
+
+  <div class="menu-content">
+    <div class="filters">
+      <div class="search-bar">
+        <input type="text" placeholder="Search restaurants or dishes...">
+        <button>🔍</button>
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Pizza</button>
+        <button class="filter-btn">Burgers</button>
+        <button class="filter-btn">Indian</button>
+        <button class="filter-btn">Chinese</button>
+        <button class="filter-btn">Italian</button>
+        <button class="filter-btn">Japanese</button>
+        <button class="filter-btn">Vegetarian</button>
+        <button class="filter-btn">Vegan</button>
+        <button class="filter-btn">Healthy</button>
+      </div>
+    </div>
+
+    <div class="restaurants-grid">
+      <!-- Restaurant 1: Pizza Palace -->
+      <div class="restaurant-card">
+        <img src="Images/pizza.jpg" alt="Pizza Palace" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Pizza Palace</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.8</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Italian</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 2.5 km • 🚗 ₹40 delivery</span>
+            <span>⏰ 25-35 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Margherita Pizza</div>
+                <div class="item-description">Fresh mozzarella, tomato sauce, basil</div>
+                <div class="item-price">₹299</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Vegetable Pizza</div>
+                <div class="item-description">Mixed vegetables, cheese, tomato sauce</div>
+                <div class="item-price">₹279</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Paneer Pizza</div>
+                <div class="item-description">Cottage cheese, capsicum, tomato sauce</div>
+                <div class="item-price">₹319</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Mushroom Pizza</div>
+                <div class="item-description">Fresh mushrooms, mozzarella, herbs</div>
+                <div class="item-price">₹289</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Spinach & Feta Pizza</div>
+                <div class="item-description">Fresh spinach, feta cheese, olive oil</div>
+                <div class="item-price">₹329</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Eggplant Parmesan Pizza</div>
+                <div class="item-description">Grilled eggplant, parmesan, tomato sauce</div>
+                <div class="item-price">₹339</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 2: Burger Barn -->
+      <div class="restaurant-card">
+        <img src="Images/burger.jpg" alt="Burger Barn" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Burger Barn</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.6</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">American</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 1.8 km • 🚗 30 minutes delivery</span>
+            <span>⏰ 20-30 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Veggie Burger</div>
+                <div class="item-description">Plant-based patty, veggies, special sauce</div>
+                <div class="item-price">₹179</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Mushroom Swiss Burger</div>
+                <div class="item-description">Mushroom patty, swiss cheese, lettuce</div>
+                <div class="item-price">₹199</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Garden Burger</div>
+                <div class="item-description">Grilled vegetables, hummus, sprouts</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Black Bean Burger</div>
+                <div class="item-description">Spicy black beans, avocado, chipotle mayo</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Portobello Mushroom Burger</div>
+                <div class="item-description">Grilled portobello, caramelized onions, herb mayo</div>
+                <div class="item-price">₹209</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Falafel Wrap</div>
+                <div class="item-description">Crispy falafel, tahini sauce, fresh veggies</div>
+                <div class="item-price">₹159</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 3: Spice Route -->
+      <div class="restaurant-card">
+        <img src="Images/spice-route.jpg" alt="Spice Route" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Spice Route</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.9</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Indian</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 3.2 km • 🚗 ₹50 delivery</span>
+            <span>⏰ 30-40 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Paneer Tikka</div>
+                <div class="item-description">Marinated cottage cheese skewers</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Palak Paneer</div>
+                <div class="item-description">Creamy spinach curry with paneer</div>
+                <div class="item-price">₹199</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Vegetable Biryani</div>
+                <div class="item-description">Fragrant basmati rice with mixed vegetables</div>
+                <div class="item-price">₹179</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Chana Masala</div>
+                <div class="item-description">Spicy chickpea curry with tomatoes and spices</div>
+                <div class="item-price">₹149</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Aloo Gobi</div>
+                <div class="item-description">Potatoes and cauliflower in aromatic spices</div>
+                <div class="item-price">₹139</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Dal Makhani</div>
+                <div class="item-description">Creamy black lentils slow-cooked with spices</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Malai Kofta</div>
+                <div class="item-description">Cheese dumplings in rich creamy sauce</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 4: Chinese food -->
+      <div class="restaurant-card">
+        <img src="Images/trishiv-chinese.jpg" alt="Dragon Wok" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Trishiv Chinese</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.7</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Chinese</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 2.1 km • 🚗 ₹35 delivery</span>
+            <span>⏰ 25-35 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Vegetable Fried Rice</div>
+                <div class="item-description">Wok-tossed rice with mixed vegetables</div>
+                <div class="item-price">₹149</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Vegetable Manchurian</div>
+                <div class="item-description">Crispy vegetable dumplings in spicy sauce</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Tofu Stir Fry</div>
+                <div class="item-description">Crispy tofu with vegetables and soy sauce</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Vegetable Chow Mein</div>
+                <div class="item-description">Stir-fried noodles with mixed vegetables</div>
+                <div class="item-price">₹159</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Spring Rolls</div>
+                <div class="item-description">Crispy rolls filled with vegetables and herbs</div>
+                <div class="item-price">₹139</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Mapo Tofu</div>
+                <div class="item-description">Silken tofu in spicy Sichuan sauce</div>
+                <div class="item-price">₹179</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Vegetable Hot Pot</div>
+                <div class="item-description">Assorted vegetables in spicy broth</div>
+                <div class="item-price">₹199</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 5: Pasta Paradise -->
+      <div class="restaurant-card">
+        <img src="Images/pasta-paradise.jpg" alt="Pasta Paradise" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Pasta Paradise</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.5</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Italian</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 1.5 km • 🚗 ₹25 delivery</span>
+            <span>⏰ 20-30 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Marinara</div>
+                <div class="item-description">Tomato sauce, garlic, basil, olive oil</div>
+                <div class="item-price">₹199</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Pesto Pasta</div>
+                <div class="item-description">Basil pesto, pine nuts, parmesan</div>
+                <div class="item-price">₹259</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Mushroom Alfredo</div>
+                <div class="item-description">Creamy sauce with mushrooms and herbs</div>
+                <div class="item-price">₹239</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Arrabbiata</div>
+                <div class="item-description">Spicy tomato sauce with red chili flakes</div>
+                <div class="item-price">₹219</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Carbonara (Vegan)</div>
+                <div class="item-description">Plant-based cream sauce with mushrooms</div>
+                <div class="item-price">₹249</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Truffle Risotto</div>
+                <div class="item-description">Creamy arborio rice with truffle oil</div>
+                <div class="item-price">₹299</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Eggplant Parmesan</div>
+                <div class="item-description">Breaded eggplant with marinara and cheese</div>
+                <div class="item-price">₹269</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 6: Sushi Zen -->
+      <div class="restaurant-card">
+        <img src="Images/sushi-zen.jpg" alt="Sushi Zen" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Sushi Zen</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.8</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Japanese</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 2.8 km • 🚗 ₹45 delivery</span>
+            <span>⏰ 30-40 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Avocado Roll</div>
+                <div class="item-description">Avocado, cucumber, sesame, nori</div>
+                <div class="item-price">₹349</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Cucumber Nigiri</div>
+                <div class="item-description">Fresh cucumber over seasoned rice</div>
+                <div class="item-price">₹299</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Vegetable Tempura</div>
+                <div class="item-description">Crispy vegetables, tempura batter, dipping sauce</div>
+                <div class="item-price">₹399</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Shiitake Mushroom Roll</div>
+                <div class="item-description">Grilled shiitake mushrooms, avocado, cucumber</div>
+                <div class="item-price">₹379</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Asparagus Nigiri</div>
+                <div class="item-description">Grilled asparagus over seasoned rice</div>
+                <div class="item-price">₹319</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Edamame</div>
+                <div class="item-description">Steamed soybeans with sea salt</div>
+                <div class="item-price">₹149</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Gyoza (Veggie)</div>
+                <div class="item-description">Pan-fried vegetable dumplings with dipping sauce</div>
+                <div class="item-price">₹229</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 7: Green Garden Cafe -->
+      <div class="restaurant-card">
+        <img src="Images/green-garden-cafe.jpg" alt="Green Garden Cafe" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Green Garden Cafe</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.7</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Vegetarian</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 1.2 km • 🚗 ₹25 delivery</span>
+            <span>⏰ 20-30 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Quinoa Buddha Bowl</div>
+                <div class="item-description">Quinoa, roasted vegetables, tahini dressing</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Stuffed Bell Peppers</div>
+                <div class="item-description">Bell peppers stuffed with quinoa and vegetables</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Sweet Potato Curry</div>
+                <div class="item-description">Creamy coconut curry with sweet potatoes</div>
+                <div class="item-price">₹179</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Grilled Vegetable Skewers</div>
+                <div class="item-description">Seasonal vegetables on skewers with herb marinade</div>
+                <div class="item-price">₹159</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Mediterranean Salad</div>
+                <div class="item-description">Mixed greens, olives, feta, balsamic dressing</div>
+                <div class="item-price">₹149</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 8: Vegan Delights -->
+      <div class="restaurant-card">
+        <img src="Images/vegan-delights.jpg" alt="Vegan Delights" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Vegan Delights</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.8</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Vegan</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 2.4 km • 🚗 ₹35 delivery</span>
+            <span>⏰ 25-35 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Jackfruit Tacos</div>
+                <div class="item-description">Pulled jackfruit, avocado, lime crema</div>
+                <div class="item-price">₹199</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Cauliflower Wings</div>
+                <div class="item-description">Crispy cauliflower with buffalo sauce</div>
+                <div class="item-price">₹179</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Beyond Burger</div>
+                <div class="item-description">Plant-based patty with all the fixings</div>
+                <div class="item-price">₹249</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Vegan Sushi Rolls</div>
+                <div class="item-description">Nori rolls with cucumber, avocado, carrots</div>
+                <div class="item-price">₹229</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Chickpea Salad Sandwich</div>
+                <div class="item-description">Mashed chickpeas, veggies on whole grain bread</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+      <!-- Restaurant 9: Salad Bar Express -->
+      <div class="restaurant-card">
+        <img src="Images/salad-bar.jpg" alt="Salad Bar Express" class="restaurant-image">
+        <div class="restaurant-info">
+          <div class="restaurant-header">
+            <div>
+              <h3 class="restaurant-name">Salad Bar Express</h3>
+              <div class="restaurant-rating">
+                <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-number">4.6</span>
+              </div>
+            </div>
+            <span class="restaurant-cuisine">Healthy</span>
+          </div>
+          <div class="restaurant-meta">
+            <span>📍 0.8 km • 🚗 ₹20 delivery</span>
+            <span>⏰ 15-25 mins</span>
+          </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Kale Caesar Salad</div>
+                <div class="item-description">Kale, croutons, parmesan, caesar dressing</div>
+                <div class="item-price">₹159</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Greek Salad</div>
+                <div class="item-description">Cucumber, tomatoes, olives, feta, oregano</div>
+                <div class="item-price">₹149</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item">
+              <div class="item-info">
+                <div class="item-name">Quinoa Power Bowl</div>
+                <div class="item-description">Quinoa, chickpeas, avocado, lemon tahini</div>
+                <div class="item-price">₹189</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Asian Slaw</div>
+                <div class="item-description">Cabbage, carrots, peanuts, ginger dressing</div>
+                <div class="item-price">₹139</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+            <div class="menu-item hidden">
+              <div class="item-info">
+                <div class="item-name">Caprese Salad</div>
+                <div class="item-description">Tomatoes, mozzarella, basil, balsamic glaze</div>
+                <div class="item-price">₹169</div>
+              </div>
+              <button class="add-to-cart">Add</button>
+            </div>
+          </div>
+          <button class="view-full-menu">View Full Menu</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>FoodieExpress</h3>
+        <p>Your favorite food, delivered fast and fresh. Order from thousands of restaurants across the city.</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Twitter">🐦</a>
+          <a href="#" title="LinkedIn">💼</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partner with Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><a href="mailto:jeelgoti115@gmail.com">jeelgoti115@gmail.com</a></li>
+          <li><a href="tel:+91-9328961867">+91-9328961867</a></li>
+          <li>Mon-Fri: 9AM-9PM</li>
+          <li>Sat-Sun: 10AM-8PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Reload the page to update navigation
+      location.reload();
+    }
+
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Add event listeners to all "Add" buttons
+      const addToCartButtons = document.querySelectorAll('.add-to-cart');
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const menuItem = this.closest('.menu-item');
+          const itemName = menuItem.querySelector('.item-name').textContent;
+          const itemPrice = parseInt(menuItem.querySelector('.item-price').textContent.replace('₹', ''));
+          const restaurantCard = this.closest('.restaurant-card');
+          const restaurantName = restaurantCard.querySelector('.restaurant-name').textContent;
+
+          addToCart(itemName, itemPrice, restaurantName);
+        });
+      });
+
+      // Add event listeners to all "View Full Menu" buttons
+      const viewFullMenuButtons = document.querySelectorAll('.view-full-menu');
+      viewFullMenuButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const restaurantCard = this.closest('.restaurant-card');
+          const hiddenItems = restaurantCard.querySelectorAll('.menu-item.hidden');
+
+          if (this.classList.contains('expanded')) {
+            // Hide items and change button text
+            hiddenItems.forEach(item => item.style.display = 'none');
+            this.classList.remove('expanded');
+            this.textContent = 'View Full Menu';
+          } else {
+            // Show items and change button text
+            hiddenItems.forEach(item => item.style.display = 'flex');
+            this.classList.add('expanded');
+            this.textContent = 'Show Less';
+          }
+        });
+      });
+
+      // Update cart count
+      updateCartCount();
+    });
+
+    function addToCart(name, price, restaurant) {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+
+      // Check if item already exists
+      const existingItem = cart.find(item => item.name === name && item.restaurant === restaurant);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          name: name,
+          price: price,
+          restaurant: restaurant,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('foodieExpressCart', JSON.stringify(cart));
+      updateCartCount();
+
+      // Show success feedback
+      showAddToCartFeedback();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+
+    function showAddToCartFeedback() {
+      // Simple feedback - could be enhanced with a toast notification
+      const feedback = document.createElement('div');
+      feedback.textContent = 'Added to cart!';
+      feedback.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: #ff6b6b;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+      `;
+      document.body.appendChild(feedback);
+
+      setTimeout(() => {
+        feedback.remove();
+      }, 2000);
+    }
+  </script>
+</body>
+</html></content>

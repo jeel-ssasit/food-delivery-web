@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .cart-icon:hover {
+      transform: scale(1.1);
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .logo:hover {
+      opacity: 0.8;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 120px auto 2rem;
+      padding: 0 2rem;
+    }
+
+    .cart-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .cart-header h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .cart-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    .cart-items {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+    }
+
+    .cart-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-image {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .item-restaurant {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: #ff6b6b;
+      font-size: 1.1rem;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 1rem;
+    }
+
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .quantity-btn:hover {
+      background: #ff6b6b;
+      color: white;
+      border-color: #ff6b6b;
+    }
+
+    .quantity-display {
+      min-width: 40px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+
+    .cart-summary {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 2rem;
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+    }
+
+    .summary-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .summary-row.total {
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: #ff6b6b;
+      border-top: 2px solid #eee;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+    }
+
+    .checkout-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+    }
+
+    .empty-cart-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-cart h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .empty-cart p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .browse-menu-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: #ff6b6b;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .browse-menu-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .cart-content {
+        grid-template-columns: 1fr;
+      }
+      .cart-container {
+        margin-top: 100px;
+        padding: 0 1rem;
+      }
+      .cart-header h1 {
+        font-size: 2rem;
+      }
+      .cart-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      .quantity-controls {
+        margin: 0;
+        justify-content: center;
+      }
+      .cart-summary {
+        position: static;
+      }
+    }
+
+    /* Custom Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      text-align: right;
+    }
+
+    .modal-close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: #ff6b6b;
+    }
+
+    .modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .modal-body h3 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .modal-body p {
+      color: #666;
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+
+    .modal-btn {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 100px;
+    }
+
+    .modal-btn:hover {
+      background-color: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Error modal styles */
+    .modal.error .modal-icon {
+      color: #e74c3c;
+    }
+
+    .modal.error .modal-btn {
+      background-color: #e74c3c;
+    }
+
+    .modal.error .modal-btn:hover {
+      background-color: #c0392b;
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    /* Success modal styles */
+    .modal.success .modal-icon {
+      color: #27ae60;
+    }
+
+    .modal.success .modal-btn {
+      background-color: #27ae60;
+    }
+
+    .modal.success .modal-btn:hover {
+      background-color: #229954;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo" onclick="window.location.href='index.html'">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="cart-container">
+    <div class="cart-header">
+      <h1>Your Cart</h1>
+      <p>Review your items and proceed to checkout</p>
+    </div>
+
+    <div id="cart-content">
+      <!-- Cart items will be loaded here -->
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+  </footer>
+
+  <!-- Custom Modal -->
+  <div id="custom-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-icon">✅</div>
+        <h3 id="modal-title">Success!</h3>
+        <p id="modal-message">Operation completed successfully.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-ok-btn" class="modal-btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+      loadCart();
+    });
+
+    // Custom Modal Functions
+    function showModal(title, message, type = 'success') {
+      const modal = document.getElementById('custom-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalMessage = document.getElementById('modal-message');
+      const modalIcon = modal.querySelector('.modal-icon');
+
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+
+      // Remove all modal types
+      modal.classList.remove('error', 'success');
+
+      if (type === 'error') {
+        modal.classList.add('error');
+        modalIcon.textContent = '❌';
+      } else {
+        modal.classList.add('success');
+        modalIcon.textContent = '✅';
+      }
+
+      modal.style.display = 'block';
+    }
+
+    function hideModal() {
+      const modal = document.getElementById('custom-modal');
+      modal.style.display = 'none';
+    }
+
+    // Modal event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalClose = document.querySelector('.modal-close');
+      const modalOkBtn = document.getElementById('modal-ok-btn');
+
+      if (modalClose) {
+        modalClose.addEventListener('click', hideModal);
+      }
+
+      if (modalOkBtn) {
+        modalOkBtn.addEventListener('click', hideModal);
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('custom-modal');
+        if (event.target === modal) {
+          hideModal();
+        }
+      });
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Redirect to home page
+      window.location.href = 'index.html';
+    }
+
+    // Load cart items
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartContent = document.getElementById('cart-content');
+
+      if (cart.length === 0) {
+        cartContent.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h2>Your cart is empty</h2>
+            <p>Add some delicious food from our menu to get started!</p>
+            <a href="menu.html" class="browse-menu-btn">Browse Menu</a>
+          </div>
+        `;
+        return;
+      }
+
+      let cartHTML = `
+        <div class="cart-content">
+          <div class="cart-items">
+      `;
+
+      cart.forEach((item, index) => {
+        cartHTML += `
+          <div class="cart-item">
+            <div class="item-image">${getItemEmoji(item.name)}</div>
+            <div class="item-details">
+              <div class="item-name">${item.name}</div>
+              <div class="item-restaurant">${item.restaurant}</div>
+              <div class="item-price">₹${item.price}</div>
+            </div>
+            <div class="quantity-controls">
+              <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+              <span class="quantity-display">${item.quantity}</span>
+              <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+      });
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = subtotal > 500 ? 0 : 50;
+      const total = subtotal + deliveryFee;
+
+      cartHTML += `
+          </div>
+
+          <div class="cart-summary">
+            <div class="summary-title">Order Summary</div>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>₹${subtotal}</span>
+            </div>
+            <div class="summary-row">
+              <span>Delivery Fee</span>
+              <span>₹${deliveryFee}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span>₹${total}</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+          </div>
+        </div>
+      `;
+
+      cartContent.innerHTML = cartHTML;
+      updateCartCount();
+    }
+
+    // Update item quantity
+    function updateQuantity(index, change) {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      cart[index].quantity += change;
+
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+
+      localStorage.setItem('foodieExpressCart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    // Remove item from cart
+    function removeItem(index) {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      cart.splice(index, 1);
+      localStorage.setItem('foodieExpressCart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    // Update cart count display
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+
+    // Get emoji for item type
+    function getItemEmoji(itemName) {
+      const name = itemName.toLowerCase();
+      if (name.includes('pizza')) return '🍕';
+      if (name.includes('pasta') || name.includes('noodle')) return '🍝';
+      if (name.includes('biryani') || name.includes('rice')) return '🍚';
+      if (name.includes('dosa')) return '🫓';
+      if (name.includes('tikka') || name.includes('kebab')) return '🍢';
+      if (name.includes('curry') || name.includes('masala')) return '🍛';
+      if (name.includes('roll') || name.includes('wrap')) return '🌯';
+      if (name.includes('burger')) return '🍔';
+      if (name.includes('samosa')) return '🥟';
+      if (name.includes('momos')) return '🥟';
+      if (name.includes('fries')) return '🍟';
+      return '🍽️';
+    }
+
+    // Checkout function
+    function checkout() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      if (!isLoggedIn) {
+        showModal('Login Required', 'Please login to proceed with checkout.', 'error');
+        // Redirect to login after modal is closed
+        setTimeout(() => {
+          window.location.href = 'logreg.html';
+        }, 2000);
+        return;
+      }
+
+      // Redirect to payment page
+      window.location.href = 'payment.html';
+    }
+  </script>
+</body>
+</html>

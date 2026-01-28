@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .contact-hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('Images/contact-hero.jpg') center/cover;
+      height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+    }
+    .contact-hero-content {
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+    .contact-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .contact-hero p {
+      font-size: 1.3rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .contact-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-form-section {
+      background: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .contact-form-section h2 {
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #ff6b6b;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .submit-btn {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      align-self: flex-start;
+    }
+    .submit-btn:hover {
+      background-color: #ff5252;
+    }
+    .contact-info-section {
+      background: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .contact-info-section h2 {
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+    }
+    .contact-info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .contact-info-item:last-child {
+      margin-bottom: 0;
+    }
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background-color: #ff6b6b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    .contact-details h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    .contact-details p {
+      color: #666;
+      line-height: 1.5;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 3rem 2rem 1rem;
+      margin-top: 2rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-section ul li a:hover {
+      color: #ff6b6b;
+    }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      color: white;
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+    }
+    .app-downloads {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .app-download {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .app-download:hover {
+      background-color: #ff5252;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #555;
+      color: #ccc;
+    }
+    .progress-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      min-width: 300px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #ff5252);
+      width: 0%;
+      border-radius: 4px;
+      transition: width 1s ease-in-out;
+    }
+    .progress-text {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    .success-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 1001;
+      display: none;
+      text-align: center;
+      min-width: 300px;
+      animation: popup 0.3s ease-out;
+    }
+    .success-popup h3 {
+      color: #4CAF50;
+      margin-bottom: 1rem;
+    }
+    .success-popup p {
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .close-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .close-btn:hover {
+      background-color: #45a049;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+    @keyframes popup {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="contact-hero">
+    <div class="contact-hero-content">
+      <h1>Contact Us</h1>
+      <p>Get in touch with us. We'd love to hear from you!</p>
+    </div>
+  </section>
+
+  <div class="contact-content">
+    <div class="contact-form-section">
+      <h2>Send us a Message</h2>
+      <form class="contact-form" action="#" method="post">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email address">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us how we can help you..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+
+    <div class="contact-info-section">
+      <h2>Get in Touch</h2>
+      <div class="contact-info-item">
+        <div class="contact-icon">📍</div>
+        <div class="contact-details">
+          <h3>Address</h3>
+          <p>123 Food Street<br>Surat, India 395004</p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-details">
+          <h3>Phone</h3>
+          <p>+91-9328961867<br>No Other Number</p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-details">
+          <h3>Email</h3>
+          <p>jeelgoti115@gmail.com<br>info@foodieexpress.com</p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">🕒</div>
+        <div class="contact-details">
+          <h3>Business Hours</h3>
+          <p>Monday - Friday: 9:00 AM - 9:00 PM<br>Saturday - Sunday: 10:00 AM - 8:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar Container -->
+  <div class="overlay" id="overlay"></div>
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-text">Submitting your message...</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Success Popup -->
+  <div class="success-popup" id="successPopup">
+    <h3>✅ Success!</h3>
+    <p>Your message has been sent successfully!</p>
+    <button class="close-btn" onclick="closePopup()">OK</button>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>FoodieExpress</h3>
+        <p>Your favorite food, delivered fast and fresh. Order from thousands of restaurants across the city.</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Twitter">🐦</a>
+          <a href="#" title="LinkedIn">💼</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partner with Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><a href="mailto:jeelgoti115@gmail.com">jeelgoti115@gmail.com</a></li>
+          <li><a href="tel:+91-9328961867">+91-9328961867</a></li>
+          <li>Mon-Fri: 9AM-9PM</li>
+          <li>Sat-Sun: 10AM-8PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const contactForm = document.querySelector('.contact-form');
+      const progressContainer = document.getElementById('progressContainer');
+      const progressFill = document.getElementById('progressFill');
+      const successPopup = document.getElementById('successPopup');
+      const overlay = document.getElementById('overlay');
+
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Show progress bar
+        overlay.style.display = 'block';
+        progressContainer.style.display = 'block';
+
+        // Animate progress bar from 0 to 100%
+        progressFill.style.width = '0%';
+        setTimeout(() => {
+          progressFill.style.width = '100%';
+        }, 10);
+
+        // Hide progress bar and show success popup after 1 second
+        setTimeout(() => {
+          progressContainer.style.display = 'none';
+          successPopup.style.display = 'block';
+        }, 1000);
+      });
+
+      // Close popup function
+      window.closePopup = function() {
+        successPopup.style.display = 'none';
+        overlay.style.display = 'none';
+        // Reset form
+        contactForm.reset();
+      };
+
+      // Close popup when clicking overlay
+      overlay.addEventListener('click', function() {
+        if (successPopup.style.display === 'block') {
+          closePopup();
+        }
+      });
+    });
+
+    // Login state management
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+    });
+
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Reload the page to update navigation
+      location.reload();
+    }
+
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+    });
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+  </script>
+</body>
+</html></content>

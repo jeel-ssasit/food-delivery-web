@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - FoodieExpress</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    .nav-links li {
+      margin-left: 2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    .cart-icon {
+      position: relative;
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+    .cart-icon::before {
+      content: '🛒';
+      font-size: 1.5rem;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #fff;
+      color: #ff6b6b;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .about-hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('Images/about.jpg') center/cover;
+      height: 60vh; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+    }
+    .about-hero-content {
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+    .about-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .about-hero p {
+      font-size: 1.3rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .about-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .story-section, .mission-section, .team-section, .stats-section {
+      margin-bottom: 4rem;
+    }
+    .story-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .story-section img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .mission-section {
+      text-align: center;
+      background-color: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .mission-section h2 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+    }
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    .stat-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ff6b6b;
+      margin-bottom: 0.5rem;
+    }
+    .team-section h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .team-member {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .team-member img {
+      width: auto;
+      height: 250px;
+      object-fit: cover;
+    }
+    .team-member h3 {
+      padding: 1rem;
+      color: #333;
+    }
+    .team-member p {
+      padding: 0 1rem 1rem;
+      color: #666;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 3rem 2rem 1rem;
+      margin-top: 2rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-section ul li a:hover {
+      color: #ff6b6b;
+    }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      color: white;
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+    }
+    .app-downloads {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .app-download {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .app-download:hover {
+      background-color: #ff5252;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #555;
+      color: #ccc;
+    }
+    @media (max-width: 768px) {
+      .about-hero h1 {
+        font-size: 2.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .story-section {
+        grid-template-columns: 1fr;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .social-links {
+        justify-content: center;
+      }
+      .app-downloads {
+        justify-content: center;
+      }
+      
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">FoodieExpress</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="logreg.html">Log/Reg</a></li>
+          <li><a href="admin-login.html" style="color: #ffeb3b; font-weight: bold;">👨‍💼 Admin</a></li>
+        </ul>
+        <div class="cart-icon">
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="about-hero">
+    <div class="about-hero-content">
+      <h1>About FoodieExpress</h1>
+      <p>Connecting food lovers with the best restaurants in your city</p>
+    </div>
+
+  </section>
+  <div class="about-content">
+    <section class="story-section">
+      <div>
+        <h2>Our Story</h2>
+        <p align="justify">Founded in 2026, FoodieExpress started as a small idea to revolutionize the way people experience food delivery. What began as a passion project among friends has grown into India's leading food delivery platform, serving millions of customers across the country.</p>
+        <p align="justify">Our journey began when we realized that great food shouldn't be limited by time or distance. We set out to create a platform that connects hungry customers with the best local restaurants, ensuring every meal is delivered hot, fresh, and on time.</p>
+        <p align="justify">Today, we're proud to partner with over 50,000 restaurants and have delivered more than 100 million meals. But our story is just beginning - we're constantly innovating to make food delivery even better for everyone involved.</p>
+        <p align="justify">Join us as we continue to write the next chapter in our story, one delicious meal at a time.</p>
+        <p align="Right">— The FoodieExpress</p>
+      </div>
+      <img src="Images/about.jpg" alt="Our Team">
+    </section>
+
+    <p style="border: 2px solid black; padding: 10px; background-color: #f28f8f; color: white; text-align: center;">
+      [Note : This is the project done by Jeel Goti for Internship Purpose and some data is picked randomly, numbers are not real amount.]
+    </p>
+    
+    <section class="mission-section">
+      <h2>Our Mission</h2>
+      <p>To make delicious food accessible to everyone, everywhere, while supporting local restaurants and creating opportunities for food service professionals across India.</p>
+      <p>We believe that great food brings people together, and we're committed to:</p>
+      <ul style="text-align: left; display: inline-block; margin-top: 1rem;">
+        <li>Delivering exceptional food experiences</li>
+        <li>Supporting local restaurants and businesses</li>
+        <li>Ensuring fair wages for delivery partners</li>
+        <li>Promoting sustainable food practices</li>
+        <li>Innovating for better customer service</li>
+      </ul>
+    </section>
+
+    <section class="stats-section">
+      <div class="stat-card">
+        <div class="stat-number">50K+</div>
+        <h3>Partner Restaurants</h3>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100M+</div>
+        <h3>Meals Delivered</h3>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">5M+</div>
+        <h3>Happy Customers</h3>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">25</div>
+        <h3>Cities Covered</h3>
+      </div>
+    </section>
+  
+    <section class="team-section">
+      <h2>Meet Me</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <img src="Images/jeelImage.jpeg" alt="Student" >
+          <h3>Jeel Goti</h3>
+          <p>Founder & Developer</p>
+        </div>
+       <!-- <div class="team-member">
+          <img src="Images/jeelImage.jpeg" alt="CTO">
+          <h3>Priya Sharma</h3>
+          <p>CTO & Co-Founder</p>
+        </div>
+        <div class="team-member">
+          <img src="images/jeelimage.jpg" alt="COO">
+          <h3>Amit Patel</h3>
+          <p>Chief Operations Officer</p>
+        </div>
+        <div class="team-member">
+          <img src="Images/jeelImage.jpeg" alt="CMO">
+          <h3>Neha Singh</h3>
+          <p>Chief Marketing Officer</p>
+        </div>  
+      </div> -->
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>FoodieExpress</h3>
+        <p align="justify">Your favorite food, delivered fast and fresh. Order from multiple restaurants across the city.</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Twitter">🐦</a>
+          <a href="#" title="LinkedIn">💼</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partner with Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><a href="mailto:jeelgoti115@gmail.com">jeelgoti115@gmail.com</a></li>
+          <li><a href="tel:+91-9328961867">+91-9328961867</a></li>
+          <li>Mon-Fri: 9AM-9PM</li>
+          <li>Sat-Sun: 10AM-8PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 FoodieExpress. All rights reserved. Made with ❤️ for food lovers.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Check login state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavigation();
+    });
+
+    // Function to update navigation based on login state
+    function updateNavigation() {
+      const isLoggedIn = localStorage.getItem('foodieExpressLoggedIn') === 'true';
+      const navLinks = document.querySelector('.nav-links');
+
+      if (isLoggedIn) {
+        // Change Log/Reg to Logout
+        const logRegLink = navLinks.querySelector('a[href="logreg.html"]');
+        if (logRegLink) {
+          logRegLink.textContent = 'Logout';
+          logRegLink.href = '#';
+          logRegLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+          });
+        }
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('foodieExpressLoggedIn');
+      localStorage.removeItem('foodieExpressUserEmail');
+      // Reload the page to update navigation
+      location.reload();
+    }
+
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make cart icon clickable
+      const cartIcon = document.querySelector('.cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function() {
+          window.location.href = 'cart.html';
+        });
+      }
+
+      // Update cart count
+      updateCartCount();
+    });
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('foodieExpressCart') || '[]');
+      const cartCount = document.querySelector('.cart-count');
+      if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+      }
+    }
+  </script>
+</body>
+</html></content>

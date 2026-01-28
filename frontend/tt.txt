@@ -1,0 +1,1 @@
+in this section when user login is succesful it turns into logout button change it to the profile button and create box at profile when click on this button it shows the profile info of logged in user and move admin login option below it
